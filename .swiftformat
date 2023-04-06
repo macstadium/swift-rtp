@@ -1,4 +1,4 @@
---indent tab
+--indent 4
 --exclude **/.build
 --exclude **/.git
 --exclude **/.github
