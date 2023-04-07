@@ -1,5 +1,11 @@
 import Foundation
 
+protocol Payloader {
+    var mtu: UInt64 { get }
+    
+    func payload(_ data: Data) -> [Data]
+}
+
 public enum EncodingError: Error {
     case malformedHeader
     case unsupportedPayloadType(_ payloadType: PayloadType)

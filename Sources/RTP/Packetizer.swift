@@ -7,6 +7,8 @@ protocol Sequencer {
     var ssrc: SourceID { get }
     var sequenceNumber: SequenceNumber { get }
     var timestamp: Timestamp { get }
+
+    mutating func nextSequenceNumber() -> SequenceNumber
 }
 
 // A Packetizer emits a sequence of RTP packets with monotonic sequence numbers.
@@ -15,6 +17,13 @@ public struct Packetizer: Sequencer {
     public let ssrc: SourceID
     public var sequenceNumber: SequenceNumber
     public var timestamp: Timestamp
+
+    var payloader: Payloader {
+        switch payloadType {
+        default:
+            return GenericPayloader()
+        }
+    }
 
     public init(
         for payloadType: PayloadType,
@@ -28,14 +37,31 @@ public struct Packetizer: Sequencer {
         self.timestamp = timestamp
     }
 
-    mutating func increment(_ samples: Timestamp) {
+    mutating func nextSequenceNumber() -> SequenceNumber {
+        let currentSequenceNumber = sequenceNumber
         (sequenceNumber, _) = sequenceNumber.addingReportingOverflow(1)
+        return currentSequenceNumber
+    }
+
+    mutating func increment(_ samples: Timestamp) {
         (timestamp, _) = timestamp.addingReportingOverflow(samples)
     }
 
-    public mutating func packetize(_ payload: Data, _ samples: Timestamp) throws -> Packet {
-        let packet = try Packet(self, payload: payload)
+    public mutating func packetize(_ payload: Data, _ samples: Timestamp) throws -> [Packet] {
+        let payloads = payloader.payload(payload)
+
+        var packets: [Packet] = []
+        for payload in payloads {
+            let packet = try Packet(
+                payloadType: payloadType,
+                payload: payload,
+                ssrc: ssrc,
+                sequenceNumber: nextSequenceNumber(),
+                timestamp: timestamp
+            )
+            packets.append(packet)
+        }
         increment(samples)
-        return packet
+        return packets
     }
 }
