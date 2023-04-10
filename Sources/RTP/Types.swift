@@ -1,8 +1,8 @@
 import Foundation
 
 protocol Payloader {
-    var mtu: UInt64 { get }
-    
+    var mtu: UInt16 { get }
+
     func payload(_ data: Data) -> [Data]
 }
 

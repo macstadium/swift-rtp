@@ -1,9 +1,9 @@
 import Foundation
 
 public struct GenericPayloader: Payloader {
-    let mtu: UInt64 = 0
+    let mtu: UInt16 = 0
 
     func payload(_ payload: Data) -> [Data] {
-        return [Data(payload)]
+        [Data(payload)]
     }
 }
