@@ -9,6 +9,9 @@ enum NaluType: UInt8 {
     case stapA = 24
     case fuA = 28
     case fuB = 29
+    case sei = 6
+    case iFrame = 5
+    case pFrame = 1
     case sps = 7
     case pps = 8
     case aud = 9
@@ -82,7 +85,7 @@ public struct H264Payloader: Payloader {
     }
 
     func extractNaluType(_ nalu: Data) -> (NaluType, UInt8) {
-        let rawValue = UInt8(nalu[0] & Masks.naluType.rawValue)
+        let rawValue = nalu.first! & Masks.naluType.rawValue
         let enumValue = NaluType(rawValue: rawValue) ?? NaluType.unknown
         return (enumValue, rawValue)
     }

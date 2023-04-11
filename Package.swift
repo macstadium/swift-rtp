@@ -21,7 +21,10 @@ let package = Package(
         ),
         .testTarget(
             name: "RTPTests",
-            dependencies: ["RTP"]
+            dependencies: ["RTP"],
+            resources: [
+                .copy("Resources"),
+            ]
         ),
     ]
 )
