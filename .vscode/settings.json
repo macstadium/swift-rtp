@@ -5,8 +5,8 @@
 	},
 	"editor.detectIndentation": false,
 	"editor.formatOnSave": true,
-	"editor.insertSpaces": false,
-	"editor.tabSize": 8,
+	"editor.insertSpaces": true,
+	"editor.tabSize": 4,
 	"files.eol": "\n",
 	//
 	// Files
@@ -41,7 +41,7 @@
 	// Property Lists
 	"[plist]": {
 		"editor.formatOnSave": true,
-		"editor.tabSize": 8,
+		"editor.tabSize": 4,
 	},
 	//
 	// Shell
@@ -51,8 +51,8 @@
 	//
 	// Swift
 	"[swift]": {
-		"editor.insertSpaces": false,
-		"editor.tabSize": 8,
+		"editor.insertSpaces": true,
+		"editor.tabSize": 4,
 	},
 	//
 	// YAML
