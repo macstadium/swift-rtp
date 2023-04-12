@@ -51,13 +51,14 @@ public struct Packetizer: Sequencer {
         let payloads = payloader.payload(payload)
 
         var packets: [Packet] = []
-        for payload in payloads {
+        for (index, payload) in payloads.enumerated() {
             let packet = try Packet(
                 payloadType: payloadType,
                 payload: payload,
                 ssrc: ssrc,
                 sequenceNumber: nextSequenceNumber(),
-                timestamp: timestamp
+                timestamp: timestamp,
+                marker: index == payloads.count - 1
             )
             packets.append(packet)
         }
