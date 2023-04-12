@@ -138,4 +138,33 @@ class H264PayloaderTests: XCTestCase {
         XCTAssertEqual(counts[NaluType.pFrame], expectedPFrameCount)
         XCTAssertNil(counts[NaluType.aud])
     }
+
+    func testComplexH264Payload() throws {
+        let payloader = H264Payloader()
+
+        guard let fixturePath = Bundle.module.url(forResource: "complex_fixture", withExtension: "h264") else {
+            XCTFail("missing H264 fixture file, can't run payloader test")
+            return
+        }
+
+        let fixtureData = try Data(contentsOf: fixturePath)
+
+        // Calculate expectations for the fixture
+        var expectedFramePayloadCount = 0
+
+        var nalus = payloader.splitNalus(fixtureData)
+        for nalu in nalus {
+            let (naluType, _) = payloader.extractNaluType(nalu)
+            if naluType == NaluType.iFrame || naluType == NaluType.pFrame {
+                expectedFramePayloadCount += Int(ceil(Double(nalu.count) / Double(payloader.mtu)))
+            }
+        }
+
+        // STAP-A + I-Frames + P-Frames + FU-A Frames
+        // expectedFramePayloadCount = I-Frames + P-Frames + FU-A Frames
+        let expectedPayloadCount = 1 + expectedFramePayloadCount
+
+        let payloads = payloader.payload(fixtureData)
+        XCTAssertEqual(payloads.count, expectedPayloadCount)
+    }
 }

@@ -85,7 +85,7 @@ public struct H264Payloader: Payloader {
     }
 
     func extractNaluType(_ nalu: Data) -> (NaluType, UInt8) {
-        let rawValue = nalu.first! & Masks.naluType.rawValue
+        let rawValue = nalu[nalu.startIndex] & Masks.naluType.rawValue
         let enumValue = NaluType(rawValue: rawValue) ?? NaluType.unknown
         return (enumValue, rawValue)
     }
@@ -115,7 +115,7 @@ public struct H264Payloader: Payloader {
         var naluDataIndex = 1
         var naluDataLength = nalu.count - naluDataIndex
         var naluDataRemaining = naluDataLength
-        let naluRefIdc = nalu[0] & Masks.naluRefIdc.rawValue
+        let naluRefIdc = nalu[nalu.startIndex] & Masks.naluRefIdc.rawValue
 
         if min(maxFragmentSize, naluDataRemaining) <= 0 {
             return []
@@ -137,7 +137,8 @@ public struct H264Payloader: Payloader {
                 secondByte |= Masks.fuEnd.rawValue
             }
             out.append(contentsOf: [secondByte])
-            out.append(nalu[naluDataIndex ..< (naluDataIndex + currentFragmentSize)])
+            let start = nalu.startIndex + naluDataIndex
+            out.append(nalu[start ..< (start + currentFragmentSize)])
             payloads.append(out)
 
             naluDataRemaining -= currentFragmentSize
