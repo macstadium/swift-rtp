@@ -20,6 +20,8 @@ public struct Packetizer: Sequencer {
 
     var payloader: Payloader {
         switch payloadType {
+        case .h264:
+            return H264Payloader()
         default:
             return GenericPayloader()
         }

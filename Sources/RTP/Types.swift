@@ -21,6 +21,7 @@ public struct PayloadType: ExpressibleByIntegerLiteral, RawRepresentable, Equata
 
     public static let marker: Self = 0b1000_0000
     public static let opus: Self = 111
+    public static let h264: Self = 102
 
     public var rawValue: IntegerLiteralType
 
