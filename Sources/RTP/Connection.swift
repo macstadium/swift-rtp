@@ -41,14 +41,14 @@
 
         func contentProcessed(error: NWError?) {
             if let error = error {
-                print("Error sending UDP packet: \(error)")
+                // print("Error sending UDP packet: \(error)")
             }
         }
 
         func receive() {
             conn.receiveMessage { [weak self] data, _, _, error in
                 if let error = error {
-                    print("Error receiving UDP packet: \(error)")
+                    // print("Error receiving UDP packet: \(error)")
                     return
                 } else if let data = data {
                     // print("⬇️ Received UDP packet of size: \(data.count)")
@@ -58,7 +58,7 @@
                         // print("🅿️ Parsed RTP packet: \(packet)")
                         self?.receiverBlock(packet)
                     } catch {
-                        print("Error handling RTP: \(error)")
+                        // print("Error handling RTP: \(error)")
                         return
                     }
                 }

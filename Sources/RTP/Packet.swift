@@ -30,7 +30,7 @@ public struct Packet {
     public let padding: UInt8
 
     var payloadWithoutPadding: Data {
-        payload[0 ..< payload.count - Int(padding)]
+        payload[payload.startIndex ..< (payload.startIndex + payload.count - Int(padding))]
     }
 
     var encodedSize: Int {
